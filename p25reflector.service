@@ -1,0 +1,118 @@
+#!/bin/bash
+### BEGIN INIT INFO
+#
+# Provides:             P25Reflector
+# Required-Start:       $all
+# Required-Stop:        
+# Default-Start:        2 3 4 5
+# Default-Stop:         0 1 6
+# Short-Description:    Example startscript P25Reflector
+
+#
+### END INIT INFO
+## Fill in name of program here.
+DAEMON=P25Reflector
+DAEMON_PATH=/usr/local/bin/
+DAEMON_ARGS=/etc/P25Reflector.ini
+CONFIG=/etc/mmdvmhost
+PGREP=/usr/bin/pgrep
+KILL=/bin/kill
+SLEEP=/bin/sleep
+ipVar=`hostname -I | cut -d' ' -f1`
+
+#PROG="P25Reflector"
+#PROG_PATH="/usr/local/bin/"
+#PROG_ARGS="/etc/P25Reflector.ini"
+#PIDFILE="/var/run/P25Reflector.pid"
+#PIDR="P25Reflector.pid"
+USER="root"
+
+start() {
+                if [ `${PGREP} ${DAEMON}` ]; then
+                        echo -e "$DAEMON is already running as PID "`$PGREP $DAEMON`
+                        exit 0;
+                else
+                        # Wait for an IP address
+                        until [ $ipVar != " " ]; do
+                                sleep 10
+                                ipVar=`hostname -I`
+                        done
+                        nice -n -10 ${DAEMON_PATH}${DAEMON} ${DAEMON_ARGS} &
+			sleep 3 
+                       echo -e "$DAEMON started as PID "`$PGREP $DAEMON`
+                        exit 0;
+                fi
+         }
+
+stop() {
+                if [ `${PGREP} ${DAEMON}` ]; then
+                        echo -e "Killing $DAEMON PID "`$PGREP $DAEMON`
+                        $KILL `${PGREP} ${DAEMON}`
+                        exit 0;
+                else
+                        echo -e "$DAEMON is not running"
+                        exit 0;
+                fi
+                }
+
+status() {
+       if [ `${PGREP} ${DAEMON}` ]; then
+                        echo -e "$DAEMON is running as PID "`${PGREP} ${DAEMON}`
+       else
+                        echo -e "$DAEMON is not running"
+       fi
+	}
+
+restart() {
+                if [ `$PGREP $DAEMON` ]; then
+                        echo -e "Killing $DAEMON PID "`$PGREP $DAEMON`
+                        $KILL `${PGREP} ${DAEMON}`
+			sleep 5
+                        nice -n -10 ${DAEMON_PATH}${DAEMON} ${DAEMON_ARGS} &
+			sleep 3 
+                        echo -e "$DAEMON re-started as PID "`${PGREP} ${DAEMON}`
+                        exit 0;
+                else
+                        echo -e "$DAEMON is not running"
+			start
+                        exit 0;
+                fi
+              
+}
+
+
+
+## Check to see if we are running as root first.
+## Found at
+## http://www.cyberciti.biz/tips/shell-root-user-check-script.html
+if [ "$(id -u)" != "0" ]; then
+      echo "This script must be run as root" 1>&2
+      exit 1
+fi
+
+case "$1" in
+      start)
+          start
+          exit 0
+      ;;
+      stop)
+          stop
+          exit 0
+      ;;
+      status)
+          status
+          exit 0
+      ;;
+      reload|restart|force-reload)
+#          stop
+#          sleep 5
+          restart
+          exit 0
+      ;;
+      **)
+          echo "Usage: $0 {start|stop|restart|status}" 1>&2
+          exit 1
+      ;;
+esac
+exit 0
+### END
