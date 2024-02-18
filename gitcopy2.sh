@@ -9,16 +9,68 @@
 #							#
 #  KF6S/VE3RD                               2020-05-12  #
 #########################################################
-# Valid Screen Names for EA7KDO - NX3224K024, NX4832K935
+# Valid Screen Names for EA7KDO - NX3224K024, NX4832K035
 # Valid Screen Names for VE3RD - NX3224K024
-parm="$1"
-ver="20200512"
+
+#if [[ $EUID -ne 0 ]]; then
+#	clear
+#	echo ""
+ #  	echo "This script must be run as root"
+#	echo "Setting root user"
+#	echo "Re-Start Script"
+#	echo ""
+#	sudo su
+  # 	exit 1
+#fi
+p1=$(pwd) ; cd .. ; homedir=$(pwd) ; cd "$p1"
+
+who=$(whoami)
+echo "This script is running as $who user"
+sleep 2
+
+run=""
+
+errtext="This is a test"
+
+
+parm1="$1"
+parm2="$2"
+ver="20220124"
 declare -i tst
-sed -i '/use_colors = /c\use_colors = ON' ~/.dialogrc
-sed -i '/screen_color = /c\screen_color = (WHITE,BLUE,ON)' ~/.dialogrc
-sed -i '/title_color = /c\title_color = (YELLOW,RED,ON)' ~/.dialogrc
+
+export NCURSES_NO_UTF8_ACS=1
+export LANG=en_US.UTF-8
+
+if [ ! -f ~/.dialog ]; then
+# j=1
+# else
+ sudo dialog --create-rc ~/.dialogrc
+fi
+
+sudo sed -i '/use_colors = /c\use_colors = ON' ~/.dialogrc
+sudo sed -i '/screen_color = /c\screen_color = (WHITE,BLUE,ON)' ~/.dialogrc
+sudo sed -i '/title_color = /c\title_color = (YELLOW,RED,ON)' ~/.dialogrc
 echo -e '\e[1;44m'
+
+if [ -z "$1" ]; then
+	clear
+fi
+
+function exitcode
+{
+txt='Abort Function\n\n
+This Script will Now Stop'"\n$errtext"
+
+dialog --title "  Programmed Exit  " --ascii-lines --msgbox "$txt" 8 78
+
 clear
+echo -e '\e[1;40m'
+run="Done"
+exit
+
+}
+
+
 
 # EA7KDO Script Function
 function getea7kdo
@@ -27,16 +79,16 @@ function getea7kdo
 #	echo "Function EA7KDO"
 	calltxt="EA7KDO"
 
-if [ -d /home/pi-star/Nextion_Temp ]; then
-  	sudo rm -R /home/pi-star/Nextion_Temp
+if [ -d "$homedir"/Nextion_Temp ]; then
+  	sudo rm -R "$homedir"/Nextion_Temp
 fi
 
     	if [ "$scn" == "NX3224K024" ]; then
-	  	sudo git clone --depth 1 https://github.com/EA7KDO/Nextion.Images /home/pi-star/Nextion_Temp
+	  	sudo git clone --depth 1 https://github.com/EA7KDO/NX3224K024 "$homedir"/Nextion_Temp
 		tst=1
 	fi     
 	if [ "$scn" == "NX4832K035" ]; then
-	  	sudo git clone --depth 1 https://github.com/EA7KDO/NX4832K035 /home/pi-star/Nextion_Temp
+	  	sudo git clone --depth 1 https://github.com/EA7KDO/NX4832K035 "$homedir"/Nextion_Temp
 		tst=2
      	fi
 	
@@ -45,8 +97,8 @@ fi
 # VE3RD Script Function
 function getve3rd
 {
-if [ -d /home/pi-star/Nextion_Temp ]; then
-  	sudo rm -R /home/pi-star/Nextion_Temp
+if [ -d "$homedir"/Nextion_Temp ]; then
+  	sudo rm -R "$homedir"/Nextion_Temp
 fi
 	tst=0
 #	echo "Function VE3RD"
@@ -54,7 +106,10 @@ fi
 	calltxt="VE3RD"
 	if [ "$scn" = "NX3224K024" ]; then	
 	 	tst=1  
-	  	sudo git clone --depth 1 https://github.com/VE3RD/Nextion /home/pi-star/Nextion_Temp
+	  	sudo git clone --depth 1 https://github.com/VE3RD/Nextion "$homedir"/Nextion_Temp
+	elif [ "$scn" == "NX4832K035" ]; then
+	  	sudo git clone --depth 1 https://github.com/VE3RD/NX4832K035 "$homedir"/Nextion_Temp
+		tst=2
 	else
 		errtext="Invalid VE3RD Screen Name $scn,  $s1,  $s2"
 		exitcode 
@@ -66,27 +121,15 @@ function getcall
 {
 #Set Screen Author
 calltxt=""
-if [ "$parm" == VE3RD ]; then
+if [ "$parm2" == VE3RD ] || [ "$parm1" == VE3RD ] ; then
 	calltxt="VE3RD"
 else
 	calltxt="EA7KDO"
 fi
 }
 
-function exitcode
-{
-txt='Abort Funtion
-This Script will Now Stop
-"$errtext"'
 
-whiptail --title " Programmed Exit Function" --msgbox "$txt"  8 78
-echo -e '\e[1;40m'
-
-exit
-
-}
-
-#### Sart of Main Code
+#### Start of Main Code
 
 ## Select User Screens
 getcall
@@ -104,34 +147,60 @@ if [ -f "/usr/local/etc/NX3224K024.tft" ]; then
    S2A=" Available     "
 else
    S2="NX3224K024"
-   S2=" Not Available "
-fi
-result=$(whiptail --title "Get $calltxt Screen Package From Github" --menu "Choose Your Nextion Screen Type" --backtitle "This Script by VE3RD $ver" 25 78 16 \
-"$S1" "$S1A 3.5 Inch Nextion Screen" \
-"$S2" "$S2A 2.4 Inch Nextion Screen" \
-"Abort" "Exit Script" 3>&1 1>&2 2>&3)
-
-errt="$?"
-echo "$result"
-scn="$result"
-
-if [ "$errt" == 1 ]||[ "$result" == "Abort" ]; then
-     errtext="Abort Chosen From Main Menu err=$errt"
-echo "Trap1"
-     exitcode
+   S2A=" Not Available "
 fi
 
-if [ "$calltxt" = "VE3RD" ]; then
+
+result=(dialog --backtitle "Screen Selector - $calltxt" --ascii-lines --menu "Choose Your $calltxt Nextion Screen Model" 22 76 16)
+
+options=(1 "$S1A 3.5 Inch Nextion Screen"
+         2 "$S2A 2.4 Inch Nextion Screen"
+         3 " Abort - Exit Script")
+
+choices=$("${result[@]}" "${options[@]}" 2>&1 >/dev/tty)
+
+#errt="$?"
+clear
+echo "Choice = $choices"
+
+if [ -z "$choices" ]; then
+#if [ "$choices" != "1" ] || [ "$choices" != "2" ] || [ "$choices" != "3" ]; then
+  errtext="Cancel Button Pressed"
+  exitcode
+fi
+
+for choice in $choices
+do
+    case $choice in
+        1)
+            echo "$S1A 3.5 Inch Nextion Screen Selected"
+		scn="NX4832K035"
+            ;;
+        2)
+            echo "$S2A 2.4 Inch Nextion Screen Selected"
+		scn="NX3224K024"
+            ;;
+        3)
+            echo "Abort - Exit Script"
+		errtext="Abort Selected"
+		exitcode
+            ;;
+    esac
+done
+
+
+if [ "$calltxt" == "VE3RD" ]; then
 	if [ "$result" == "NX3224K024" ]; then
-echo "Trap2"
+#echo "Trap2"
 		scn="$result"
 	else
-echo "Trap3"
+#echo "Trap3"
 		errtext=" Invalid  Screen name for $calltxt"
 	fi
 fi
 
 echo "$scn $calltxt"
+
 
 #echo " End Processing Parameters  - $scn $calltxt"
 
@@ -142,17 +211,17 @@ model="$scn"
 tft='.tft' 
 #gz='.gz'
 #Put Pi-Star file system in RW mode
-sudo mount -o remount,rw /
+sudo mount -o remount,rw / > /dev/null
 sleep 1s
 
 #Stop the cron service
 sudo systemctl stop cron.service  > /dev/null
 
 
-#Test for /home/pi-star/Nextion_Temp and remove it, if it exists
+#Test for "$homedir"/Nextion_Temp and remove it, if it exists
 
-if [ -d /home/pi-star/Nextion_Temp ]; then
-  	sudo rm -R /home/pi-star/Nextion_Temp
+if [ -d "$homedir"/Nextion_Temp ]; then
+  	sudo rm -R "$homedir"/Nextion_Temp
 fi
 
   # Get Nextion Screen/Scripts and support files from github
@@ -179,16 +248,20 @@ else
 	sudo mkdir /usr/local/etc/Nextion_Support
 fi
 
-sudo chmod +x /home/pi-star/Nextion_Temp/*.sh
-sudo rsync -avqru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* --exclude=profiles.txt
+sudo chmod +x "$homedir"/Nextion_Temp/*.sh
+sudo rsync -avqru "$homedir"/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* --exclude=profiles.txt
 
-if [ -f /home/pi-star/Nextion_Temp/profiles.txt ]; then
+sudo rsync -avqru "$homedir"/Scripts/stripped2.csv  /usr/local/etc/
+sudo mount -o remount,rw / 
+sudo wget https://database.radioid.net/static/user.csv -O /usr/local/etc/stripped.csv
+
+if [ -f "$homedir"/Nextion_Temp/profiles.txt ]; then
 	if [ ! -f /usr/local/etc/Nextion_Support/profiles.txt ]; then
         	if [ "$fb" ]; then
 			txtn= "Replacing Missing Profiles.txt"
 			txt="$txt\n""$txtn"
         	fi
-        	sudo cp  /home/pi-star/Nextion_Temp/profiles.txt /usr/local/etc/Nextion_Support/
+        	sudo cp  "$homedir"/Nextion_Temp/profiles.txt /usr/local/etc/Nextion_Support/
 	fi
 fi
 
@@ -196,12 +269,11 @@ model="$scn"
     echo "Remove Existing $model$tft and copy in the new one"
 txtn="Remove Existing $model$tft and copy in the new one"
 txt="$txt""$txtn"
-#whiptail --title "$title" --msgbox "$txt" 8 80
 
 if [ -f /usr/local/etc/"$model$tft" ]; then
 	sudo rm /usr/local/etc/NX*K*.tft
 fi
-sudo cp /home/pi-star/Nextion_Temp/"$model$tft" /usr/local/etc/
+sudo cp "$homedir"/Nextion_Temp/"$model$tft" /usr/local/etc/
 
 
  FILE=/usr/local/etc/"$model$tft"
@@ -219,10 +291,14 @@ execution_time=`printf "%.2f seconds" $duration`
 
 
 txt="$calltxt Scripts Loaded: $execution_time"
-whiptail --title "$title" --msgbox "$txt" 8 90
+#whiptail --title "$title" --msgbox "$txt" 8 90
+dialog --title "  $title  " --ascii-lines --msgbox "$txt" 8 78
 
 echo -e '\e[1;40m'
-clear
 
+if [ -z "$1" ]; then
+	clear
+fi
 
-
+sudo mount -o remount,ro /
+exit

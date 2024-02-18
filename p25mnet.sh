@@ -11,50 +11,39 @@
 #########################################################################
 export NCURSES_NO_UTF8_ACS=1
 
-declare -i slen
-
-if [ "$1" ]; then
-        sc1="$1"
-	slen1=$(expr length "$sc1")
-
-	if [ "$slen1" != 15 ]; then
-		echo "Wrong String Length for Security Password"
-		exit
-	fi
-	m4="$sc1"
-else
-
-	if [ -f /home/pi-star/MNet.txt ]; then
-		sc1=$(cat /home/pi-star/MNet.txt)
-		slen1=$(expr length "$sc1")
-
-		if [ "$slen1" != 15 ]; then
-			echo "Wrong String Length for Security Password"
-			exit
-		fi
-
-		m4="$sc1"
-	else
-		echo "Security Password Not Found"
-		exit
-	fi 
-fi
-
-sudo mount -o remount,rw /
+s1=""
+s2=""
+s3=""
 
 slen2=$(expr length "$sc2")
 
-echo "$sc1"
-echo "$sc2"
-m1="MNet_Network"
-m2="0000"
-m3="mnet.hopto.org"
-m5="62031"
+s1=$(grep 10210 /root/P25Hosts.txt | cut -f1)
 
-textstr="$m1\t\t$m2\t$m3\t\t\t$m4\t\t$m5"
+s2=$(grep 10211 /root/P25Hosts.txt | cut -f1)
 
-sudo sed -i "\$a$textstr" /root/DMR_Hosts.txt
+s3=$(grep 10230 /root/P25Hosts.txt | cut -f1)
 
+echo "S1:$s1"
+echo "S2:$s2"
+echo "S3:$s3"
+
+if [ "$s1" == '' ]; then
+	echo "Addding 10210"
+	textstr="10210\tmnet.hopto.org\t41000"
+	sudo sed -i "\$a$textstr" /root/P25Hosts.txt
+fi
+
+if [ "$s2" == '' ]; then
+	echo "Addding 10211"
+	textstr="10211\tmnet.hopto.org\t41010"
+	sudo sed -i "\$a$textstr" /root/P25Hosts.txt
+fi
+
+if [ "$s3" == '' ] && [ "$1" != "" ]; then
+	echo "Addding 10230"
+	textstr="10230\tmitchp25.hopto.org\t41000"
+	sudo sed -i "\$a$textstr" /root/P25Hosts.txt
+fi
 echo "Updating Hostfiles..."
 
 sudo /usr/local/sbin/HostFilesUpdate.sh
