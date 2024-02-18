@@ -233,25 +233,6 @@ case $CHOICE in
 		sudo sed -i '/^\[/h;G;/NextionDriver/s/\(DMRidX1=\).*/\15/m;P;d'  /etc/mmdvmhost
 		sudo sed -i '/^\[/h;G;/NextionDriver/s/\(DMRidX2=\).*/\16/m;P;d'  /etc/mmdvmhost
 
-		sudo sed -i '/^\[/h;G;/NextionDriver/s/\(GroupsFile=\).*/\1groups.txt/m;P;d'  /etc/mmdvmhost
-
-
-		if grep -Fq GroupsFileSrc /etc/mmdvmhost; then
-        		echo "GroupsFileSrc Found"
- 		else
-        		echo "Inserting GroupsFileSrc"
-        		sed -i '/^\[NextionDriver\]/a\GroupsFileSrc=https:\/\/www.pistar.uk\/downloads\/groups.txt' /etc/mmdvmhost
-		fi
-
-
- #       	sed -i '/^\[NextionDriver\]/a\GroupsFilesrc=https:\/\/www.pistar.uk\/downloads\/groups.txt' /etc/mmdvmhost
-
-#.*/\1\/dev\/ttyAMA0/m;P;d'
-#sudo wget https://www.pistar.uk/downloads/groups.txt/m
-#GroupsFile=groups.txt
-#GroupsFileSrc=https://www.pistar.uk/downloads/groups.txt
-
-
 		#Set UserDataMask Fields if not already there.
 		if grep -Fq SendUserDataMask /etc/mmdvmhost; then
         		echo "SendUserDataMask Found"
@@ -423,10 +404,8 @@ case $CHOICE in
 
 
 	echo "Installing BC"
-#	sudo apt-get install bc
+	sudo apt-get install bc
 
-	sudo apt install -y bc
-	
 	sudo mount -o remount,rw /
 	sudo mount -o remount,rw /
 
