@@ -449,8 +449,8 @@ echo -e '\e[1;37m'
 
 sleep 3
 
-        sudo cp /home/pi-star/Scripts/groups.txt /usr/local/etc/
-
+        #sudo cp /home/pi-star/Scripts/groups.txt /usr/local/etc/
+ 	wget https://www.pistar.uk/downloads/groups.txt -O /usr/local/etc/groups.txt
 	sudo pistar-firewall
 
 	#rm -R /Nextion
