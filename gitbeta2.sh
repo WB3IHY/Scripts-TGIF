@@ -84,6 +84,7 @@ fi
 
 	if [ "$scn" == "NX4832K035" ]; then
 	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-Beta "$homedir"/Nextion_Temp
+echo "Github Screen set https://github.com/TGIF-Network/NX4832K035-Beta"
 		tst=2
      	fi
 	
@@ -174,7 +175,7 @@ duration=$(echo "$(date +%s.%N) - $start" | bc)
 execution_time=`printf "%.2f seconds" $duration`
 
 
-txt="$calltxt Scripts Loaded: $execution_time"
+txt="$calltxt Scripts Loaded from TGIF-Network ' $execution_time"
 #whiptail --title "$title" --msgbox "$txt" 8 90
 dialog --title "  $title  " --ascii-lines --msgbox "$txt" 8 78
 
