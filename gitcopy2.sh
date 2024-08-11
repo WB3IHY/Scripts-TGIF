@@ -10,7 +10,6 @@
 #  KF6S/VE3RD                               2020-05-12  #
 #########################################################
 # Valid Screen Names for EA7KDO - NX3224K024, NX4832K035
-# Valid Screen Names for VE3RD - NX3224K024
 
 #if [[ $EUID -ne 0 ]]; then
 #	clear
@@ -84,50 +83,21 @@ if [ -d "$homedir"/Nextion_Temp ]; then
 fi
 
     	if [ "$scn" == "NX3224K024" ]; then
-	  	sudo git clone --depth 1 https://github.com/EA7KDO/NX3224K024 "$homedir"/Nextion_Temp
+	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX3224K024 "$homedir"/Nextion_Temp
 		tst=1
 	fi     
 	if [ "$scn" == "NX4832K035" ]; then
-	  	sudo git clone --depth 1 https://github.com/EA7KDO/NX4832K035 "$homedir"/Nextion_Temp
+	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO "$homedir"/Nextion_Temp
 		tst=2
      	fi
 	
 }
 
-# VE3RD Script Function
-function getve3rd
-{
-if [ -d "$homedir"/Nextion_Temp ]; then
-  	sudo rm -R "$homedir"/Nextion_Temp
-fi
-	tst=0
-#	echo "Function VE3RD"
-     	
-	calltxt="VE3RD"
-	if [ "$scn" = "NX3224K024" ]; then	
-	 	tst=1  
-	  	sudo git clone --depth 1 https://github.com/VE3RD/Nextion "$homedir"/Nextion_Temp
-	elif [ "$scn" == "NX4832K035" ]; then
-	  	sudo git clone --depth 1 https://github.com/VE3RD/NX4832K035 "$homedir"/Nextion_Temp
-		tst=2
-	else
-		errtext="Invalid VE3RD Screen Name $scn,  $s1,  $s2"
-		exitcode 
-	fi
-
-}
-
 function getcall
 {
 #Set Screen Author
-calltxt=""
-if [ "$parm2" == VE3RD ] || [ "$parm1" == VE3RD ] ; then
-	calltxt="VE3RD"
-else
-	calltxt="EA7KDO"
-fi
+calltxt="EA7KDO"
 }
-
 
 #### Start of Main Code
 
@@ -189,16 +159,6 @@ do
 done
 
 
-if [ "$calltxt" == "VE3RD" ]; then
-	if [ "$result" == "NX3224K024" ]; then
-#echo "Trap2"
-		scn="$result"
-	else
-#echo "Trap3"
-		errtext=" Invalid  Screen name for $calltxt"
-	fi
-fi
-
 echo "$scn $calltxt"
 
 
@@ -233,12 +193,6 @@ if [ "$calltxt" == "EA7KDO" ]; then
  
 fi
 
-
-  # Get VE3RD File Set
-if [ "$calltxt" == "VE3RD" ]; then
-	echo "Getting Screens for $calltxt"
-	getve3rd
-fi
 
 
 if [ ! -d /usr/local/etc/Nextion_Support ]; then

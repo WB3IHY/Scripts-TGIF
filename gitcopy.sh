@@ -18,12 +18,13 @@ if [ -z "$1" ]; then
 	echo ""
 	echo "  No Screen Name Provided"
 	echo
-        echo "	 Valid Screens - EA7KDO) - NX3224K024, NX4832K035"
+        echo "	 Valid Screens - EA7KDO - NX3224K024, NX4832K035"
 	echo " " 
 	echo " 	Syntax: gitcopy.sh NX????K???   // Will copy EA7KDO Files - Default for Screen"
 	echo " 	Adding a second parameter(anything) will provide feedback as the script runs (Commandline)"
 	echo " "
 	exit
+
 fi
  p1=$(pwd) ; cd .. ; homedir=$(pwd) ; cd "$p1"
 
@@ -81,7 +82,7 @@ function getea7kdo
 
     	if [ "$scn" == "NX3224K024" ]; then
 		cleandirs
-	  	sudo git clone --depth 1 https://github.com/EA7KDO/NX3224K024 "$homedir"/Nextion_Temp
+	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX3224K024 "$homedir"/Nextion_Temp
 		chmod +x "$homedir"/Nextion_Temp/*.sh
 		mkdir /usr/local/etc/Nextion_Support
 		sudo rsync -avqru "$homedir"/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* 
@@ -94,7 +95,7 @@ tst=1
 	fi     
 	if [ "$scn" == "NX4832K035" ]; then
 		cleandirs
-	  	sudo git clone --depth 1 https://github.com/EA7KDO/NX4832K035 "$homedir"/Nextion_Temp
+	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO "$homedir"/Nextion_Temp
 		sudo chmod +x "$homedir"/Nextion_Temp/*.sh
 		mkdir /usr/local/etc/Nextion_Support
 		sudo rsync -avqru "$homedir"/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* 
