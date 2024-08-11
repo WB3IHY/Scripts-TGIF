@@ -79,9 +79,11 @@ function getVE3ZRD
 #	echo "Function VE3ZRD"
 	calltxt="VE3ZRD"
 
+
+
 	if [ "$scn" == "NX4832K035" ]; then
 		cleandirs
-	  	sudo git clone --depth 1 https://github.com/VE3ZRD/NX4832K035-Beta "$homedir"/Nextion_Temp
+	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-Beta "$homedir"/Nextion_Temp
 		sudo chmod +x "$homedir"/Nextion_Temp/*.sh
 		mkdir /usr/local/etc/Nextion_Support
 		sudo rsync -avqru "$homedir"/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* 
