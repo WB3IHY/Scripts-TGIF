@@ -88,6 +88,8 @@ fi
 	fi     
 	if [ "$scn" == "NX4832K035" ]; then
 	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO "$homedir"/Nextion_Temp
+echo "Getting Github repository: https://github.com/TGIF-Network/NX4832K035-KDO"
+
 		tst=2
      	fi
 	
