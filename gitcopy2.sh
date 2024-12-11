@@ -55,6 +55,11 @@ if [ -z "$1" ]; then
 	clear
 fi
 
+function UpdateNextionDriver
+{
+/home/pi-star/Scripts/NextionDriver4M17.sh
+}
+
 function exitcode
 {
 txt='Abort Function\n\n
@@ -242,6 +247,8 @@ sudo cp "$homedir"/Nextion_Temp/"$model$tft" /usr/local/etc/
 
 sudo systemctl start cron.service  > /dev/null
 
+UpdateNextionDriver
+
 duration=$(echo "$(date +%s.%N) - $start" | bc)
 execution_time=`printf "%.2f seconds" $duration`
 
@@ -257,4 +264,3 @@ if [ -z "$1" ]; then
 fi
 
 sudo mount -o remount,ro /
-exit
