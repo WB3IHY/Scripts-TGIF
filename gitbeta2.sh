@@ -84,8 +84,9 @@ fi
 
 	if [ "$scn" == "NX4832K035" ]; then
 	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-Beta "$homedir"/Nextion_Temp
-echo "Github Screen set https://github.com/TGIF-Network/NX4832K035-Beta"
+		echo "Github Screen set https://github.com/TGIF-Network/NX4832K035-Beta"
 		tst=2
+		cp "$homedir"/Nextion_Temp/Colors.ini /etc/
      	fi
 	
 }

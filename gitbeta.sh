@@ -12,6 +12,7 @@
 # Use screen model from command $1
 # Valid Screen Names for VE3ZRD - NX3224K024, NX4832K935
 declare -i tst
+sudo mount -o remount,rw /
 
 if [ -z "$0" ]; then
 	clear
@@ -92,8 +93,9 @@ function getVE3ZRD
 		    	echo "Downloaded new Screen package for $model$tft"
 			echo "Copied new tft to /usr/local/etc/"	
 		fi
+		tst=2	
+		cp /usr/local/etc/Nextion_Support/Colors.ini /etc/Colors.ini
      	fi
-tst=2	
 	if [ "$tst" == 0 ]; then
 		errtext="Invalid VE3ZRD Screen Name $scn"	
 		exitcode 
@@ -141,9 +143,8 @@ sudo systemctl stop cron.service  > /dev/null
 
 getVE3ZRD
  
+
 model="$scn"
-
-
 
  FILE=/usr/local/etc/"$model$tft"
  if [ ! -f "$FILE" ]; then
