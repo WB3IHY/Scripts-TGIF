@@ -1,33 +1,32 @@
 #!/bin/bash
 #########################################################
-#  Nextion TFT Support for Nextion 2.4" 		#
+#  Nextion TFT Support for Nextion 3.5" Screen		#
 #  Gets all Scripts and support files from github       #
 #  and copies them into the Nextion_Support directory   "
 #  and copies the NX??? tft file into /usr/local/etc    #
 #  and returns a script duration time to the Screen 	#
-#  as a script completion flag				#
+#  as a script completion flag. VE3ZRD Version		#
 #							#
-#  KF6S/VE3RD                               2021-12-21  #
+#  KF6S/VE3RD                               2024-12-18  #
 #########################################################
 # Use screen model from command $1
 # Valid Screen Names for VE3ZRD - NX3224K024, NX4832K935
 declare -i tst
-sudo mount -o remount,rw /
 
 if [ -z "$0" ]; then
 	clear
 	echo ""
 	echo "  No Screen Name Provided"
 	echo
-        echo "	 Valid Screens - VE3ZRD) - NX3224K024, NX4832K035"
+        echo "	 Valid Screens - VE3ZRD - NX3224K024, NX4832K035"
 	echo " " 
-	echo " 	Syntax: gitcopy.sh NX????K???   // Will copy VE3ZRD Files - Default for Screen"
+	echo " 	Syntax: gitbeta.sh NX????K???   // Will copy VE3ZRD Files - Default for Screen"
 	echo " 	Adding a second parameter(anything) will provide feedback as the script runs (Commandline)"
 	echo " "
 	exit
 fi
  p1=$(pwd) ; cd .. ; homedir=$(pwd) ; cd "$p1"
-
+  homedir=/home/pi-star/
 #s1="NX3224K024"
 s3="NX4832K035"
 errtext="Error! - Aborting"
@@ -94,7 +93,6 @@ function getVE3ZRD
 			echo "Copied new tft to /usr/local/etc/"	
 		fi
 		tst=2	
-		cp /usr/local/etc/Nextion_Support/Colors.ini /etc/Colors.ini
      	fi
 	if [ "$tst" == 0 ]; then
 		errtext="Invalid VE3ZRD Screen Name $scn"	
@@ -143,8 +141,9 @@ sudo systemctl stop cron.service  > /dev/null
 
 getVE3ZRD
  
-
 model="$scn"
+
+
 
  FILE=/usr/local/etc/"$model$tft"
  if [ ! -f "$FILE" ]; then
@@ -163,7 +162,13 @@ if [ ! "$fb" ]; then
  exec 2>&3
 fi 
 
+if [ ! -f "/etc/Colors.ini" ]; then
+	cp /home/pi-star/Nextion_Temp/Colors.ini /etc/
+	if [ ! "$fb" ]; then
+ 		echo "Copying Colors.ini /etc/"
+	fi 
 
+fi
 # echo "$scn Ready  $execution_time"
 echo "$scn Ready to Flash! $execution_time"
 
