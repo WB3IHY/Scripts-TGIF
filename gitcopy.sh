@@ -26,7 +26,6 @@ if [ -z "$1" ]; then
 	exit
 
 fi
- p1=$(pwd) ; cd .. ; homedir=$(pwd) ; cd "$p1"
 
 s1="NX3224K024"
 s3="NX4832K035"
@@ -59,15 +58,15 @@ function cleandirs()
 if [ -d /usr/local/etc/Nextion_Support ]; then
     sudo rm -R /usr/local/etc/Nextion_Support
 fi
-if [ -d "$homedir"/Nextion_Temp ]; then
-    sudo rm -R "$homedir"/Nextion_Temp
+if [ -d /home/pi-star/Nextion_Temp ]; then
+    sudo rm -R /home/pi-star/Nextion_Temp
 fi
 if [ -f /usr/local/etc/"$model$tft" ]; then
 	sudo rm /usr/local/etc/NX*.tft
 fi
 if [ "$fb" ]; then
     echo "Removed /usr/local/etc/Nextion_Support Directory"
-    echo "Removed "$homedir"/Nextion_Temp Directory"
+    echo "Removed /home/pi-star/Nextion_Temp Directory"
     echo "Remove Existing $model$tft"
 fi
 
@@ -82,11 +81,11 @@ function getea7kdo
 
     	if [ "$scn" == "NX3224K024" ]; then
 		cleandirs
-	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX3224K024-KDO "$homedir"/Nextion_Temp
-		chmod +x "$homedir"/Nextion_Temp/*.sh
+	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX3224K024-KDO /home/pi-star/Nextion_Temp
+		chmod +x /home/pi-star/Nextion_Temp/*.sh
 		mkdir /usr/local/etc/Nextion_Support
-		sudo rsync -avqru "$homedir"/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* 
-		sudo cp "$homedir"/Nextion_Temp/"$model$tft" /usr/local/etc/
+		sudo rsync -avqru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* 
+		sudo cp /home/pi-star//Nextion_Temp/"$model$tft" /usr/local/etc/
 		if [ "$fb" ]; then
 		    	echo "Downloaded new Screen package for $model$tft"
 			echo "Copied new tft to /usr/local/etc/"	
@@ -95,11 +94,11 @@ function getea7kdo
 	fi     
 	if [ "$scn" == "NX4832K035" ]; then
 		cleandirs
-	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO "$homedir"/Nextion_Temp
-		sudo chmod +x "$homedir"/Nextion_Temp/*.sh
+	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO /home/pi-star/Nextion_Temp
+		sudo chmod +x /home/pi-star/Nextion_Temp/*.sh
 		mkdir /usr/local/etc/Nextion_Support
-		sudo rsync -avqru "$homedir"/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* 
-		sudo cp "$homedir"/Nextion_Temp/"$model$tft" /usr/local/etc/
+		sudo rsync -avqru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* 
+		sudo cp /home/pi-star/Nextion_Temp/"$model$tft" /usr/local/etc/
 		if [ "$fb" ]; then
 		    	echo "Downloaded new Screen package for $model$tft"
 			echo "Copied new tft to /usr/local/etc/"	
@@ -148,7 +147,6 @@ sleep 1s
 #Stop the cron service
 sudo systemctl stop cron.service  > /dev/null
 
-# Using "$homedir"/Nextion_Temp/
 
 
 getea7kdo
