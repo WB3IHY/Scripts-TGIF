@@ -57,29 +57,27 @@ function getve3zrd
 	if [ -d /home/pi-star/Nextion_Temp ]; then
   		sudo rm -R /home/pi-star/Nextion_Temp
 	fi
+echo "Remove /home/pi-star/Nextion_Temp"
 	if [ -d /usr/local/etc/Nextion_Support ]; then
   		sudo rm  /usr/local/etc/Nextion_Support/*
 	else
 		sudo mkdir /usr/local/etc/Nextion_Support
 	fi
-
+echo "Remove files from /usr/local/etc/Nextion_Support"
 	if [ -f /usr/local/etc/*.tft ]; then
   		sudo rm /usr/local/etc/*.tft
 	fi
-       
+echo "Deleting old tft file"
+echo "Getting Github repository: https://github.com/TGIF-Network/NX4024K032"
+
 	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4024K032 /home/pi-star/Nextion_Temp
 	rsync /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/* 
 	cp /home/pi-star/Nextion_Temp/NX* /usr/local/etc/
-
-		echo "Getting Github repository: https://github.com/TGIF-Network/NX4024K032"
-
 	
 }
 
 
 #### Start of Main Code
-
-## Select User Screens
 
 #Start Duration Timer
 start=$(date +%s.%N)
@@ -90,6 +88,8 @@ tft='.tft'
 #Put Pi-Star file system in RW mode
 sudo mount -o remount,rw / > /dev/null
 sleep 1s
+
+getve3zrd
 
 #Stop the cron service
 sudo systemctl stop cron.service  > /dev/null

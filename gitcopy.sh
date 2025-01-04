@@ -1,14 +1,14 @@
 #!/bin/bash
-#########################################################
-#  Nextion TFT Support for Nextion 2.4" 		#
-#  Gets all Scripts and support files from github       #
-#  and copies them into the Nextion_Support directory   "
-#  and copies the NX??? tft file into /usr/local/etc    #
-#  and returns a script duration time to the Screen 	#
-#  as a script completion flag				#
-#							#
-#  KF6S/VE3RD                               2021-12-21  #
-#########################################################
+#################################################################
+#  Nextion TFT Support for Nextion 2.4 and 3.5 inch Screen	#
+#  Gets all Scripts and support files from github       	#
+#  and copies them into the Nextion_Support directory   	#
+#  and copies the NX??? tft file into /usr/local/etc    	#
+#  and returns a script duration time to the Screen 		#
+#  as a script completion flag					#
+#								#
+#  KF6S/VE3RD                               2021-12-21  	#
+#################################################################
 # Use screen model from command $1
 # Valid Screen Names for EA7KDO - NX3224K024, NX4832K935
 declare -i tst
@@ -82,7 +82,7 @@ function getea7kdo
 
     	if [ "$scn" == "NX3224K024" ]; then
 		cleandirs
-	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX3224K024 "$homedir"/Nextion_Temp
+	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX3224K024-KDO "$homedir"/Nextion_Temp
 		chmod +x "$homedir"/Nextion_Temp/*.sh
 		mkdir /usr/local/etc/Nextion_Support
 		sudo rsync -avqru "$homedir"/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* 
@@ -91,7 +91,7 @@ function getea7kdo
 		    	echo "Downloaded new Screen package for $model$tft"
 			echo "Copied new tft to /usr/local/etc/"	
 		fi
-tst=1		
+		tst=1		
 	fi     
 	if [ "$scn" == "NX4832K035" ]; then
 		cleandirs
@@ -104,8 +104,8 @@ tst=1
 		    	echo "Downloaded new Screen package for $model$tft"
 			echo "Copied new tft to /usr/local/etc/"	
 		fi
+		tst=2	
      	fi
-tst=2	
 	if [ "$tst" == 0 ]; then
 		errtext="Invalid EA7KDO Screen Name $scn"	
 		exitcode 
