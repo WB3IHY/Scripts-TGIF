@@ -83,7 +83,7 @@ function getVE3ZRD
 	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-ZRD /home/pi-star/Nextion_Temp
 		sudo chmod +x /home/pi-star/Nextion_Temp/*.sh
 		mkdir /usr/local/etc/Nextion_Support
-		sudo rsync -avqru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* 
+		sudo rsync -avqru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX*  --exclude=profiles.ini
 		sudo cp /home/pi-star/Nextion_Temp/"$model$tft" /usr/local/etc/
 		if [ "$fb" ]; then
 		    	echo "Downloaded new Screen package for $model$tft"
@@ -162,16 +162,13 @@ tft='.tft'
 #gz='.gz'
 #Put Pi-Star file system in RW mode
 sudo mount -o remount,rw /
-sleep 1s
 
 #Stop the cron service
 sudo systemctl stop cron.service  > /dev/null
 
-
 getVE3ZRD
  
 model="$scn"
-
 
  FILE=/usr/local/etc/"$model$tft"
  if [ ! -f "$FILE" ]; then
@@ -194,6 +191,13 @@ if [ ! -f "/etc/Colors.ini" ]; then
 	cp /home/pi-star/Nextion_Temp/Colors.ini /etc/
 	if [ ! "$fb" ]; then
  		echo "Copying Colors.ini /etc/"
+	fi 
+
+fi
+if [ ! -f "/etc/profiles.ini" ]; then
+	cp /home/pi-star/Nextion_Temp/profiles.ini /etc/
+	if [ ! "$fb" ]; then
+ 		echo "Copying Copying profiles.ini.ini to /etc/"
 	fi 
 
 fi
