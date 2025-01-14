@@ -30,6 +30,13 @@ fi
 s1="NX3224K024"
 s3="NX4832K035"
 errtext="Error! - Aborting"
+if [ "$2" == "Beta" ]; then
+Beta="$2"
+else
+Beta="0"
+fi
+#echo "$2"
+#echo "$Beta"
 
 ## Strip off .tft - Take only the first 10 characters
 scn=$(echo "$1" | tr [:lower:] [:upper:])
@@ -37,7 +44,7 @@ scn=$(echo "$1" | tr [:lower:] [:upper:])
 scn="${scn:0:10}"
 
 #Feed back is off by default - Turn it on with anything as parameter  2
-fb="$2"
+fb="$3"
 #Set Call to EA7KDO
 calltxt="EA7KDO"
 
@@ -84,7 +91,7 @@ function getea7kdo
 	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX3224K024-KDO /home/pi-star/Nextion_Temp
 		chmod +x /home/pi-star/Nextion_Temp/*.sh
 		mkdir /usr/local/etc/Nextion_Support
-		sudo rsync -avqru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* 
+		sudo rsync -avqru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* --exclude=ColorThemes.ini 
 		sudo cp /home/pi-star//Nextion_Temp/"$model$tft" /usr/local/etc/
 		if [ "$fb" ]; then
 		    	echo "Downloaded new Screen package for $model$tft"
@@ -94,16 +101,36 @@ function getea7kdo
 	fi     
 	if [ "$scn" == "NX4832K035" ]; then
 		cleandirs
-	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO /home/pi-star/Nextion_Temp
+echo "Beta = $Beta"
+
+		if [ "$Beta" == "Beta" ]; then
+		  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO-Beta /home/pi-star/Nextion_Temp
+			if [ "$fb" ]; then
+                        	echo "Downloaded new EA7KDO Beta Screen package for $model$tft"
+                        	echo "Copied new tft to /usr/local/etc/"
+                	fi
+
+		else
+		  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO /home/pi-star/Nextion_Temp
+
+			if [ "$fb" ]; then
+                        	echo "Downloaded new EA7KDO Screen package for $model$tft"
+                        	echo "Copied new tft to /usr/local/etc/"
+                	fi
+		fi
+
 		sudo chmod +x /home/pi-star/Nextion_Temp/*.sh
 		mkdir /usr/local/etc/Nextion_Support
-		sudo rsync -avqru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* 
+		sudo rsync -avqru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* --exclude=ColorThemes.ini
 		sudo cp /home/pi-star/Nextion_Temp/"$model$tft" /usr/local/etc/
 		if [ "$fb" ]; then
 		    	echo "Downloaded new Screen package for $model$tft"
 			echo "Copied new tft to /usr/local/etc/"	
 		fi
 		tst=2	
+		if [ ! -f /etc/ColorThemes.txt ] && [ -f /home/pi-star/Nextion_Temp/ColorThemes.ini ]; then
+			cp /home/pi-star/Nextion_Temp/ColorTheme.ini /etc/
+		fi
      	fi
 	if [ "$tst" == 0 ]; then
 		errtext="Invalid EA7KDO Screen Name $scn"	
