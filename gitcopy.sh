@@ -92,7 +92,7 @@ function getea7kdo
 		chmod +x /home/pi-star/Nextion_Temp/*.sh
 		mkdir /usr/local/etc/Nextion_Support
 		sudo rsync -avqru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* --exclude=ColorThemes.ini 
-		sudo cp /home/pi-star//Nextion_Temp/"$model$tft" /usr/local/etc/
+		sudo cp /home/pi-star/Nextion_Temp/"$model$tft" /usr/local/etc/
 		if [ "$fb" ]; then
 		    	echo "Downloaded new Screen package for $model$tft"
 			echo "Copied new tft to /usr/local/etc/"	
@@ -129,7 +129,7 @@ echo "Beta = $Beta"
 		fi
 		tst=2	
 		if [ ! -f /etc/ColorThemes.txt ] && [ -f /home/pi-star/Nextion_Temp/ColorThemes.ini ]; then
-			cp /home/pi-star/Nextion_Temp/ColorTheme.ini /etc/
+			cp /home/pi-star/Nextion_Temp/ColorThemes.ini /etc/
 		fi
      	fi
 	if [ "$tst" == 0 ]; then
