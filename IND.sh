@@ -34,12 +34,12 @@ homedir=/home/pi-star/
 curdir=$(pwd) 
 clear 
 echo " " 
-echo " If this is a fresh pi-star install - Select Uppdate" 
+echo " If this is a fresh pi-star install - Select Update" 
 echo " This will do a pistar update before installing the Driver" 
 echo " " 
 echo " Selecting Start will install the driver without doing the Update" 
 echo " " 
-echo " This script Installs the Nextion Driver. It will require a reboot " 
+echo " This script installs the Nextion Driver. It will require a reboot " 
 echo " Part way through the procedure. After the Reboot, run this script again" 
 echo " and select 'Continue' in the following menu" 
 echo " " 
@@ -186,7 +186,7 @@ case $CHOICE in
 	    echo "Checking Nextion Driver Installation"
 		preparedir2
 		sudo /Nextion/check_installation.sh
-		echo "Sleeping 7 Seconds before re-staring the script"
+		echo "Sleeping 7 Seconds before re-starting the script"
 		sleep 7
 		sudo ./IND.sh
 	   ;;
@@ -244,7 +244,7 @@ fi
 	echo "$TOPort"
 sleep 2
 
-TITLE="Second Level Menue - Continue"
+TITLE="Second Level Menu - Continue"
 MENU="Choose your Screen-to-Pi Interface"
 
 OPTIONS=(1 "USB to TTL Interface"
@@ -397,7 +397,7 @@ sudo wget https://database.radioid.net/static/user.csv  --output-document=/usr/l
 
 
 	echo "Nextion Driver Installation Completed"
-	echo "Auxilliary Function Installation Completed"
+	echo "Auxiliary Function Installation Completed"
 	echo "Rebooting Pi-Star in 3 seconds"
 sleep 5
 
