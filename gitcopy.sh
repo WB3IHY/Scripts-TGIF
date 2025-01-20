@@ -101,7 +101,7 @@ function getea7kdo
 	fi     
 	if [ "$scn" == "NX4832K035" ]; then
 		cleandirs
-echo "Beta = $Beta"
+#echo "Beta = $Beta"
 
 		if [ "$Beta" == "Beta" ]; then
 		  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO-Beta /home/pi-star/Nextion_Temp
@@ -201,7 +201,7 @@ fi
 
 
 # echo "$scn Ready  $execution_time"
-echo "$scn Ready to Flash! $execution_time"
+echo "$scn Beta Ready to Flash! $execution_time"
 
 
 
