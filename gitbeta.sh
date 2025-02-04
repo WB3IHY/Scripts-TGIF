@@ -202,7 +202,7 @@ if [ ! -f "/etc/profiles.ini" ]; then
 
 fi
 # echo "$scn Ready  $execution_time"
-echo "$scn Ready to Flash! $execution_time"
+echo "$scn Ready to Flash! \r Time=$execution_time"
 
 
 

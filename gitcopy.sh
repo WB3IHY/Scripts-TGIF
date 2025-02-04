@@ -121,15 +121,18 @@ function getea7kdo
 
 		sudo chmod +x /home/pi-star/Nextion_Temp/*.sh
 		mkdir /usr/local/etc/Nextion_Support
-		sudo rsync -avqru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* --exclude=ColorThemes.ini
+		sudo rsync -avqru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* --exclude=ColorThemes.ini --exclude=Profiles.ini
 		sudo cp /home/pi-star/Nextion_Temp/"$model$tft" /usr/local/etc/
 		if [ "$fb" ]; then
 		    	echo "Downloaded new Screen package for $model$tft"
 			echo "Copied new tft to /usr/local/etc/"	
 		fi
 		tst=2	
-		if [ ! -f /etc/ColorThemes.txt ] && [ -f /home/pi-star/Nextion_Temp/ColorThemes.ini ]; then
+		if [ ! -f /etc/ColorThemes.ini ] && [ -f /home/pi-star/Nextion_Temp/ColorThemes.ini ]; then
 			cp /home/pi-star/Nextion_Temp/ColorThemes.ini /etc/
+		fi
+		if [ ! -f /etc/Profiles.ini ] && [ -f /home/pi-star/Nextion_Temp/Profiles.ini ]; then
+			cp /home/pi-star/Nextion_Temp/Profiles.ini /etc/
 		fi
      	fi
 	if [ "$tst" == 0 ]; then
