@@ -235,11 +235,13 @@ if [ -d /home/rock/ ]; then
 	TOPort=$(echo "$tport" | sed "s/\//\\\\\//g")
 	echo "Setting NextionDriver Port to /dev/ttyAML0 for the RadXA Board"
 	sudo sed -i '/^\[/h;G;/NextionDriver]/s/\(Port=\).*/\1'"$TOPort"'/m;P;d'  /etc/mmdvmhost
+	sudo sed -i '/^\[/h;G;/NextionDriver]/s/\(WaitForLan=\).*/\11/m;P;d'  /etc/mmdvmhost
 else
 	tport="/dev/ttyUSB0"
 	TOPort=$(echo "$tport" | sed "s/\//\\\\\//g")
 	echo "Setting NextionDriver Port to /dev/ttyUSB0 for Pi-Star"
 	sudo sed -i '/^\[/h;G;/NextionDriver]/s/\(Port=\).*/\1'"$TOPort"'/m;P;d'  /etc/mmdvmhost
+	sudo sed -i '/^\[/h;G;/NextionDriver]/s/\(WaitForLan=\).*/\11/m;P;d'  /etc/mmdvmhost
 fi
 	echo "$TOPort"
 sleep 2
