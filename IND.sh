@@ -342,14 +342,14 @@ case $CHOICE in
         esac
 
 	sudo mount -o remount,rw /
-
+if [ "$1" != "Bata" ]; then
 	# Clear all comment flags on Nextion Driver Block, DMRid lines
 	sudo sed '/DMRid/s/^#//g' -i /etc/mmdvmhost
 
 	#Reset DMRidx State and Country Fields
 	sudo sed -i '/^\[/h;G;/NextionDriver/s/\(DMRidX1=\).*/\15/m;P;d'  /etc/mmdvmhost
 	sudo sed -i '/^\[/h;G;/NextionDriver/s/\(DMRidX2=\).*/\16/m;P;d'  /etc/mmdvmhost
-
+fi
 	#Set UserDataMask Fields if not already there.
 	if grep -Fq SendUserDataMask /etc/mmdvmhost; then
         	echo "SendUserDataMask Found"
