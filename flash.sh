@@ -120,7 +120,7 @@ CHOICE=$(dialog --clear \
                 "${OPTIONS[@]}" \
                 2>&1 >/dev/tty)
 
-clear
+#clear
 echo -e '\e[1;44m'
 
 if [ "$found2" ]; then
@@ -198,7 +198,7 @@ CHOICE=$(dialog --clear \
                 "${OPTIONS[@]}" \
                 2>&1 >/dev/tty)
 
-clear
+#clear
 echo -e '\e[1;44m'
 case $CHOICE in
         1)
