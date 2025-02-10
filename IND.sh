@@ -191,9 +191,9 @@ case $CHOICE in
 		sudo ./IND.sh
 	   ;;
 	5)
-		sudo wget https://database.radioid.net/static/user.csv  --output-document=/usr/local/etc/stripped.csv
-#		sudo rsync -avqru /home/pi-star/Nextion_Temp/stripped2.csv  /usr/local/etc/
-		exit
+		sudo wget https://database.radioid.net/static/user.csv  --output-document=/usr/local/etc/stripped2.csv
+		Hostfilesupdate.sh
+		sudo ./IND.sh
 	   ;;
 	6)
             	echo "You chose to Remove the NextionDriver Configuration"
@@ -201,7 +201,7 @@ case $CHOICE in
 		sudo ./IND.sh
 	   ;;
 	7)
-            	echo "This function will install the Nextion Support Files"
+            	echo "This function will install the Nextion Screen Support Files"
 		sudo ./gitcopy2.sh
 		sudo ./IND.sh 
 	   ;;
@@ -395,7 +395,7 @@ sleep 3
 	fi
 
 sleep 3
-sudo wget https://database.radioid.net/static/user.csv  --output-document=/usr/local/etc/stripped.csv
+sudo wget https://database.radioid.net/static/user.csv  --output-document=/usr/local/etc/stripped2.csv
 
 
 	echo "Nextion Driver Installation Completed"
