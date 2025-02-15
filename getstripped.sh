@@ -67,5 +67,6 @@ sudo sed -i 's/South Carolina/SC/g' /usr/local/etc/stripped.csv
 sudo sed -i 's/DMR Mental Ward/TGIF Mothership/g' /usr/local/etc/groups.txt
 sudo sed -i 's/DMR Campfire/TGIF Mothership/g' /usr/local/etc/groups.txt
 cp /usr/local/etc/stripped.csv /usr/local/etc/users.csv
+cp /usr/local/etc/stripped.csv /usr/local/etc/stripped2.csv
 sudo mount -o remount,ro /
 
