@@ -111,10 +111,10 @@ function getea7kdo
                 	fi
 
 		else
-		  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO /home/pi-star/Nextion_Temp
+		  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO-Beta /home/pi-star/Nextion_Temp
 
 			if [ "$fb" ]; then
-                        	echo "Downloaded new EA7KDO Screen package for $model$tft"
+                        	echo "Downloaded new EA7KDO Beta Screen package for $model$tft"
                         	echo "Copied new tft to /usr/local/etc/"
                 	fi
 		fi
