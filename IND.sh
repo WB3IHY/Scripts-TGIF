@@ -396,7 +396,7 @@ sleep 3
 
 sleep 3
 #sudo wget https://database.radioid.net/static/user.csv  --output-document=/usr/local/etc/stripped2.csv
-sudo /home/pi-star/Scripts/getstripped.csv
+sudo /home/pi-star/Scripts/getstripped.sh
 
 	echo "Nextion Driver Installation Completed"
 	echo "Auxiliary Function Installation Completed"
