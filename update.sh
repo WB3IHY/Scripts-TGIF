@@ -12,4 +12,4 @@ sudo mount -o remount,rw /
 sudo git pull
 sudo ./getstripped.sh
 sudo mount -o remount,ro /
-
+echo "Scripts Directory Updated"

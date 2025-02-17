@@ -9,7 +9,7 @@
 set -o errexit
 set -o pipefail
 sudo mount -o remount,rw /
-
+echo "Started Update Sequence for Stripped.csv"
 sudo wget https://database.radioid.net/static/user.csv -O /usr/local/etc/stripped.csv
 sudo sed -i 's/United States/USA/g' /usr/local/etc/stripped.csv
 sudo sed -i 's/Australia/Aus/g' /usr/local/etc/stripped.csv
