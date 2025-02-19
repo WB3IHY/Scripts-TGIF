@@ -56,17 +56,6 @@ if [ -z "$1" ]; then
 	clear
 fi
 
-function UpdateNextionDriver
-{
-ver=$(/usr/local/bin/NextionDriver -V | tr '\n' " " | cut -d " " -f4)
-if [ "$ver" == "1.26" ] || [ "$ver" == "1.25A" ]; then
-	 echo "Found Current NextionDriver Version $ver"
-else
-	echo "NextionDriver $ver Replaced with Version 1.25A Patched for M17"
-	/home/pi-star/Scripts/NextionDriver4M17.sh
-fi
-}
-
 function exitcode
 {
 txt='Abort Function\n\n
@@ -134,7 +123,7 @@ do
             echo "EA7KDO 3.5 Inch Nextion Screen Selected"
 		scn="NX4832K035"
 		repo="TGIF-Network"
-		ghName="NX4832K035-KDO"
+		ghName="NX4832K035-KDO=Beta"
 
             ;;
         2)
