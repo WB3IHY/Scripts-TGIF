@@ -355,7 +355,7 @@ fi
         	echo "SendUserDataMask Found"
  	else
         	echo "Inserting SendUserDataMask"
-        	sed -i '/^\[NextionDriver\]/a\SendUserDataMask=0b00011110' /etc/mmdvmhost
+        	sed -i '/^\[NextionDriver\]/a\SendUserDataMask=0b01011111' /etc/mmdvmhost
 	fi
 
 
