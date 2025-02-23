@@ -349,10 +349,14 @@ if [ "$1" != "Bata" ]; then
 	#Reset DMRidx State and Country Fields
 	sudo sed -i '/^\[/h;G;/NextionDriver/s/\(DMRidX1=\).*/\15/m;P;d'  /etc/mmdvmhost
 	sudo sed -i '/^\[/h;G;/NextionDriver/s/\(DMRidX2=\).*/\16/m;P;d'  /etc/mmdvmhost
+
+                sudo sed -i '/^\[/h;G;/NextionDriver/s/\(^DMRidFile=\).*/\1stripped2.csv/m;P;d' /etc/mmdvmhost
+
 fi
 	#Set UserDataMask Fields if not already there.
 	if grep -Fq SendUserDataMask /etc/mmdvmhost; then
         	echo "SendUserDataMask Found"
+                sudo sed -i '/^\[/h;G;/NextionDriver/s/\(^SendUserDataMask=\).*/\10b01011111/m;P;d' /etc/mmdvmhost
  	else
         	echo "Inserting SendUserDataMask"
         	sed -i '/^\[NextionDriver\]/a\SendUserDataMask=0b01011111' /etc/mmdvmhost
