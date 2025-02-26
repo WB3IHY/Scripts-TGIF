@@ -101,7 +101,7 @@ function getea7kdo
 	fi     
 	if [ "$scn" == "NX4832K035" ]; then
 		cleandirs
-#echo "Beta = $Beta"
+		#echo "Beta = $Beta"
 
 		if [ "$Beta" == "Beta" ]; then
 		  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO-Beta /home/pi-star/Nextion_Temp
@@ -119,6 +119,10 @@ function getea7kdo
                 	fi
 		fi
 
+		if [ ! -d /home/pi-star/Nextion_Temp2 ]; then
+    			mkdir /home/pi-star/Nextion_Temp2
+		fi
+		cp -r /home/pi-star/Nextion_Temp/* /home/pi-star/Nextion_Temp2
 		sudo chmod +x /home/pi-star/Nextion_Temp/*.sh
 		mkdir /usr/local/etc/Nextion_Support
 		sudo rsync -avqru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* --exclude=ColorThemes.ini --exclude=profiles.ini
@@ -183,8 +187,6 @@ getea7kdo
  
 model="$scn"
 
-
-
  FILE=/usr/local/etc/"$model$tft"
  if [ ! -f "$FILE" ]; then
         # Copy failed
@@ -196,7 +198,7 @@ model="$scn"
 sudo systemctl start cron.service  > /dev/null
 
 duration=$(echo "$(date +%s.%N) - $start" | bc)
-execution_time=`printf "%.2f secs" $duration`
+execution_time=`printf "%.2f secs" "$duration"`
 
 if [ ! "$fb" ]; then
  exec 2>&3
