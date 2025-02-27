@@ -50,6 +50,10 @@ calltxt="EA7KDO"
 
 #echo "$scn"
 
+if [ ! -d /home/pi-star/Nextion_Temp2 ]; then
+    	mkdir /home/pi-star/Nextion_Temp2
+fi
+
 ## Programmed Shutdown
 function exitcode
 {
@@ -105,6 +109,7 @@ function getea7kdo
 
 		if [ "$Beta" == "Beta" ]; then
 		  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO-Beta /home/pi-star/Nextion_Temp
+   			sudo rsync -avqru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Temp2
 			if [ "$fb" ]; then
                         	echo "Downloaded new EA7KDO Beta Screen package for $model$tft"
                         	echo "Copied new tft to /usr/local/etc/"
@@ -119,9 +124,6 @@ function getea7kdo
                 	fi
 		fi
 
-		if [ ! -d /home/pi-star/Nextion_Temp2 ]; then
-    			mkdir /home/pi-star/Nextion_Temp2
-		fi
 		cp -r /home/pi-star/Nextion_Temp/* /home/pi-star/Nextion_Temp2
 		sudo chmod +x /home/pi-star/Nextion_Temp/*.sh
 		mkdir /usr/local/etc/Nextion_Support
