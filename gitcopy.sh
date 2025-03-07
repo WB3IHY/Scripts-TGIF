@@ -54,6 +54,10 @@ if [ ! -d /home/pi-star/Nextion_Temp2 ]; then
     	mkdir /home/pi-star/Nextion_Temp2
 fi
 
+function Logit
+{
+echo "$1" &>> /home/pi-star/gc.log 
+}
 ## Programmed Shutdown
 function exitcode
 {
@@ -75,11 +79,9 @@ fi
 if [ -f /usr/local/etc/"$model$tft" ]; then
 	sudo rm /usr/local/etc/NX*.tft
 fi
-if [ "$fb" ]; then
-    echo "Removed /usr/local/etc/Nextion_Support Directory"
-    echo "Removed /home/pi-star/Nextion_Temp Directory"
-    echo "Remove Existing $model$tft"
-fi
+    Logit "Removed /usr/local/etc/Nextion_Support Directory"
+    Logit "Removed /home/pi-star/Nextion_Temp Directory"
+    Logit "Remove Existing $model$tft"
 
 }
 
@@ -105,47 +107,40 @@ function getea7kdo
 		tst=1		
 	fi     
 	if [ "$scn" == "NX4832K035" ]; then
-		cleandirs
+#		cleandirs
 		#echo "Beta = $Beta"
 
 		if [ "$Beta" == "Beta" ]; then
 			# First attempt to clone 
-			 if [ "$fb" ]; then
- 				echo "First Attempt to Clone Files" 
-			fi
-
+ 			Logit "First Attempt to Clone Files Starting" 
 			cleandirs
  		  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO-Beta /home/pi-star/Nextion_Temp
+
+			# if not found
 			if [ ! -f /home/pi-star/Nextion_Temp/NX4832K035.tft ]; then
-			        if [ "$fb" ]; then 
-					echo "First Attempt to Clone Files Failed" 
-				fi
-				# Second attempt to clone
-				if [ "$fb" ]; then
-					echo "Second Attempt to Clone Files" 
-				fi
-				cleandirs 
- 				sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO-Beta /home/pi-star/Nextion_Temp
+					Logit "First Attempt to Clone Files Failed" 
+					# Second attempt to clone
+					Logit "Second Attempt to Clone Files Started" 
+					cleandirs 
+ 					sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO-Beta /home/pi-star/Nextion_Temp
+				# Did it work	
 				if [ ! -f /home/pi-star/Nextion_Temp/NX4832K035.tft ]; then
-			        if [ "$fb" ]; then
-					echo "Second Attempt to Clone Files Failed" 
-				fi
-				   # Third and last attempt to clone
-				 if [ "$fb" ]; then
-					echo "Third Attempt to Clone Files" 
-				fi
-				 cleandirs 
-			 	   sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO-Beta /home/pi-star/Nextion_Temp
+					Logit "Second Attempt to Clone Files Failed" 
+				   	# Third and last attempt to clone
+					Logit "Third Attempt to Clone Files Started" 
+				 	cleandirs 
+			 	   	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO-Beta /home/pi-star/Nextion_Temp
 				fi
 			else
-			 	if [ "$fb" ]; then
-					echo "First Attempt to Clone Files Found" 
-				fi
+					Logit "First Attempt to Clone NX4832K035.tft File Found" 
 
 			fi
 			if [ ! -f /home/pi-star/Nextion_Temp/NX4832K035.tft ]; then
 			   echo "GitCopy Process Failed!"
+			   Logit "GitCopy Process Failed!"
 				exit
+			else
+				Logit "Git Copy Proceess Found New NX4832K035.tft"
 			fi
    			sudo rsync -qru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Temp2
 			if [ "$fb" ]; then
@@ -188,6 +183,8 @@ function getea7kdo
 
 #### Start of Main Code
 
+errt=$(date)
+echo "$errt" > /home/pi-star/gc.log
 
 #echo "$scn  - $call" 
 if [ "$fb" ]; then
@@ -251,4 +248,4 @@ fi
 echo "$scn Beta Ready to Flash! $execution_time"
 
 
-
+cat /home/pi-star/gc.log
