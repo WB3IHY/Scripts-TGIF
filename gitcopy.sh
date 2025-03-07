@@ -93,6 +93,7 @@ function getea7kdo
     	if [ "$scn" == "NX3224K024" ]; then
 		cleandirs
 	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX3224K024-KDO /home/pi-star/Nextion_Temp
+		
 		chmod +x /home/pi-star/Nextion_Temp/*.sh
 		mkdir /usr/local/etc/Nextion_Support
 		sudo rsync -qru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* --exclude=ColorThemes.ini 
@@ -108,7 +109,44 @@ function getea7kdo
 		#echo "Beta = $Beta"
 
 		if [ "$Beta" == "Beta" ]; then
-		  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO-Beta /home/pi-star/Nextion_Temp
+			# First attempt to clone 
+			 if [ "$fb" ]; then
+ 				echo "First Attempt to Clone Files" 
+			fi
+
+			cleandirs
+ 		  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO-Beta /home/pi-star/Nextion_Temp
+			if [ ! -f /home/pi-star/Nextion_Temp/NX4832K035.tft ]; then
+			        if [ "$fb" ]; then 
+					echo "First Attempt to Clone Files Failed" 
+				fi
+				# Second attempt to clone
+				if [ "$fb" ]; then
+					echo "Second Attempt to Clone Files" 
+				fi
+				cleandirs 
+ 				sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO-Beta /home/pi-star/Nextion_Temp
+				if [ ! -f /home/pi-star/Nextion_Temp/NX4832K035.tft ]; then
+			        if [ "$fb" ]; then
+					echo "Second Attempt to Clone Files Failed" 
+				fi
+				   # Third and last attempt to clone
+				 if [ "$fb" ]; then
+					echo "Third Attempt to Clone Files" 
+				fi
+				 cleandirs 
+			 	   sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO-Beta /home/pi-star/Nextion_Temp
+				fi
+			else
+			 	if [ "$fb" ]; then
+					echo "First Attempt to Clone Files Found" 
+				fi
+
+			fi
+			if [ ! -f /home/pi-star/Nextion_Temp/NX4832K035.tft ]; then
+			   echo "GitCopy Process Failed!"
+				exit
+			fi
    			sudo rsync -qru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Temp2
 			if [ "$fb" ]; then
                         	echo "Downloaded new EA7KDO Beta Screen package for $model$tft"
