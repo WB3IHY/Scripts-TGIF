@@ -43,7 +43,7 @@ scn=$(echo "$1" | tr [:lower:] [:upper:])
 #tr [:lower:] [:upper:]
 scn="${scn:0:10}"
 
-#Feed back is off by default - Turn it on with anything as parameter  2
+#Feed back is off by default - Turn it on with anything as parameter  3
 fb="$3"
 #Set Call to EA7KDO
 calltxt="EA7KDO"
@@ -53,6 +53,13 @@ calltxt="EA7KDO"
 if [ ! -d /home/pi-star/Nextion_Temp2 ]; then
     	mkdir /home/pi-star/Nextion_Temp2
 fi
+if [ -d /home/pi-star/Nextion_Temp ]; then
+    	rm -r /home/pi-star/Nextion_Temp
+fi
+if [ -d /usr/local/etc/Nextion_Support ]; then
+    	rm -r /usr/local/etc/Nextion_Support 
+fi
+
 
 function Logit
 {
@@ -149,17 +156,18 @@ function getea7kdo
                 	fi
 
 		else
+  			#Not Beta	 
 		  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX4832K035-KDO /home/pi-star/Nextion_Temp
 
 			if [ "$fb" ]; then
-                        	echo "Downloaded new EA7KDO Beta Screen package for $model$tft"
+                        	echo "Downloaded EA7KDO Original Screen package for $model$tft"
                         	echo "Copied new tft to /usr/local/etc/"
                 	fi
 		fi
 
-		cp -r /home/pi-star/Nextion_Temp/* /home/pi-star/Nextion_Temp2
-		sudo chmod +x /home/pi-star/Nextion_Temp/*.sh
 		mkdir /usr/local/etc/Nextion_Support
+		sudo chmod +x /home/pi-star/Nextion_Temp/*.sh
+		rsync  /home/pi-star/Nextion_Temp/* /home/pi-star/Nextion_Temp2
 		sudo rsync -qru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* --exclude=ColorThemes.ini --exclude=profiles.ini
 		sudo cp /home/pi-star/Nextion_Temp/"$model$tft" /usr/local/etc/
 		if [ "$fb" ]; then
@@ -169,9 +177,22 @@ function getea7kdo
 		tst=2	
 		if [ ! -f /etc/ColorThemes.ini ] && [ -f /home/pi-star/Nextion_Temp/ColorThemes.ini ]; then
 			cp /home/pi-star/Nextion_Temp/ColorThemes.ini /etc/
+			if [ "$fb" ]; then
+			    	echo "Copied ColorThemes.ini to /etc/"
+			fi
+		else
+			echo "ColorThemes.ini found in /etc/ - Not Copied"
 		fi
 		if [ ! -f /etc/profiles.ini ] && [ -f /home/pi-star/Nextion_Temp/profiles.ini ]; then
 			cp /home/pi-star/Nextion_Temp/profiles.ini /etc/
+			if [ "$fb" ]; then
+			    	echo "Copied profiles.ini to /etc/"
+			fi
+		else
+			if [ "$fb" ]; then
+			    	echo "profiles.ini found in /etc/ - Not Copied"
+			fi
+
 		fi
      	fi
 	if [ "$tst" == 0 ]; then
@@ -217,8 +238,6 @@ sleep 1s
 
 #Stop the cron service
 sudo systemctl stop cron.service  > /dev/null
-
-
 
 getea7kdo
 
