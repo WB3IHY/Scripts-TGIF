@@ -181,8 +181,11 @@ function getea7kdo
 			    	echo "Copied ColorThemes.ini to /etc/"
 			fi
 		else
-			echo "ColorThemes.ini found in /etc/ - Not Copied"
+			if [ "$fb" ]; then
+				echo "ColorThemes.ini found in /etc/ - Not Copied"
+			fi	
 		fi
+#
 		if [ ! -f /etc/profiles.ini ] && [ -f /home/pi-star/Nextion_Temp/profiles.ini ]; then
 			cp /home/pi-star/Nextion_Temp/profiles.ini /etc/
 			if [ "$fb" ]; then
