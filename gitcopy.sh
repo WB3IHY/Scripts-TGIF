@@ -147,7 +147,7 @@ function getea7kdo
 			   Logit "GitCopy Process Failed!"
 				exit
 			else
-				Logit "Git Copy Proceess Found New NX4832K035.tft"
+				Logit "Git Copy Process Found New NX4832K035.tft"
 			fi
    			sudo rsync -qru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Temp2
 			if [ "$fb" ]; then
