@@ -56,9 +56,6 @@ fi
 if [ -d /home/pi-star/Nextion_Temp ]; then
     	rm -r /home/pi-star/Nextion_Temp
 fi
-if [ -d /usr/local/etc/Nextion_Support ]; then
-    	rm -r /usr/local/etc/Nextion_Support 
-fi
 
 
 function Logit
@@ -77,18 +74,14 @@ function exitcode
 
 function cleandirs()
 {
-if [ -d /usr/local/etc/Nextion_Support ]; then
-    sudo rm -R /usr/local/etc/Nextion_Support
-fi
 if [ -d /home/pi-star/Nextion_Temp ]; then
     sudo rm -R /home/pi-star/Nextion_Temp
+    Logit "Removed /home/pi-star/Nextion_Temp Directory"
 fi
 if [ -f /usr/local/etc/"$model$tft" ]; then
 	sudo rm /usr/local/etc/NX*.tft
-fi
-    Logit "Removed /usr/local/etc/Nextion_Support Directory"
-    Logit "Removed /home/pi-star/Nextion_Temp Directory"
     Logit "Remove Existing $model$tft"
+fi
 
 }
 
@@ -104,7 +97,7 @@ function getea7kdo
 	  	sudo git clone --depth 1 https://github.com/TGIF-Network/NX3224K024-KDO /home/pi-star/Nextion_Temp
 		
 		chmod +x /home/pi-star/Nextion_Temp/*.sh
-		mkdir /usr/local/etc/Nextion_Support
+		#mkdir /usr/local/etc/Nextion_Support
 		sudo rsync -qru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* --exclude=ColorThemes.ini 
 		sudo cp /home/pi-star/Nextion_Temp/"$model$tft" /usr/local/etc/
 		if [ "$fb" ]; then
@@ -140,6 +133,10 @@ function getea7kdo
 				fi
 			else
 					Logit "First Attempt to Clone NX4832K035.tft File Found" 
+					if [ -d /usr/local/etc/Nextion_Support ]; then
+    						rm -r /usr/local/etc/Nextion_Support 
+						Logit "Nextion_Support Directory Removed"
+					fi
 
 			fi
 			if [ ! -f /home/pi-star/Nextion_Temp/NX4832K035.tft ]; then
@@ -149,6 +146,7 @@ function getea7kdo
 			else
 				Logit "Git Copy Process Found New NX4832K035.tft"
 			fi
+			#Backup Nextion_Temp
    			sudo rsync -qru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Temp2
 			if [ "$fb" ]; then
                         	echo "Downloaded new EA7KDO Beta Screen package for $model$tft"
@@ -163,18 +161,28 @@ function getea7kdo
                         	echo "Downloaded EA7KDO Original Screen package for $model$tft"
                         	echo "Copied new tft to /usr/local/etc/"
                 	fi
+			if [ -f /home/pi-star/Nextion_Temp/NX4832K035.tft ]; then
+    				rm -r /usr/local/etc/Nextion_Support 
+			 	if [ "$fb" ]; then
+					echo "Nextion_Support Directory Removed"				
+				fi
+			fi
 		fi
 
+		# Create Nextion_Support Directory
 		mkdir /usr/local/etc/Nextion_Support
+		# Ensure all scripts are ececutable
 		sudo chmod +x /home/pi-star/Nextion_Temp/*.sh
-		rsync  /home/pi-star/Nextion_Temp/* /home/pi-star/Nextion_Temp2
+		# Send required files to Nextion_Support
 		sudo rsync -qru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* --exclude=ColorThemes.ini --exclude=profiles.ini
+		#Send .tft to /usr/local/etc/
 		sudo cp /home/pi-star/Nextion_Temp/"$model$tft" /usr/local/etc/
 		if [ "$fb" ]; then
 		    	echo "Downloaded new Screen package for $model$tft"
 			echo "Copied new tft to /usr/local/etc/"	
 		fi
 		tst=2	
+		# Send ColorThemes.ini to /etc if required
 		if [ ! -f /etc/ColorThemes.ini ] && [ -f /home/pi-star/Nextion_Temp/ColorThemes.ini ]; then
 			cp /home/pi-star/Nextion_Temp/ColorThemes.ini /etc/
 			if [ "$fb" ]; then
@@ -185,7 +193,7 @@ function getea7kdo
 				echo "ColorThemes.ini found in /etc/ - Not Copied"
 			fi	
 		fi
-#
+		# Send profiles.ini to /etc/ if required.
 		if [ ! -f /etc/profiles.ini ] && [ -f /home/pi-star/Nextion_Temp/profiles.ini ]; then
 			cp /home/pi-star/Nextion_Temp/profiles.ini /etc/
 			if [ "$fb" ]; then
