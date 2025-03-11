@@ -252,7 +252,6 @@ sudo systemctl stop cron.service  > /dev/null
 
 getea7kdo
 
-sudo rsync -qru /home/pi-star/Nextion_Temp2/*  /home/pi-star/Nextion_Temp 
 
 model="$scn"
 
@@ -273,9 +272,11 @@ if [ ! "$fb" ]; then
  exec 2>&3
 fi 
 
-
+tag=$(git -C /home/pi-star/Nextion_Temp/ tag)
 # echo "$scn Ready  $execution_time"
-echo "$scn Beta Ready to Flash! $execution_time"
+echo "$scn $tag Ready to Flash! $execution_time"
 
-
+if [ ! -f /home/pi-star/Nextion_Temp/NX4832K035.tft ]; then
+sudo rsync -qru /home/pi-star/Nextion_Temp2/*  /home/pi-star/Nextion_Temp 
+fi
 ######## cat /home/pi-star/gc.log
