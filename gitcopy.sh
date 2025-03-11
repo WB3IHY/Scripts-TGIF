@@ -278,4 +278,4 @@ fi
 echo "$scn Beta Ready to Flash! $execution_time"
 
 
-cat /home/pi-star/gc.log
+######## cat /home/pi-star/gc.log
