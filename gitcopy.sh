@@ -53,9 +53,9 @@ calltxt="EA7KDO"
 if [ ! -d /home/pi-star/Nextion_Temp2 ]; then
     	mkdir /home/pi-star/Nextion_Temp2
 fi
-if [ -d /home/pi-star/Nextion_Temp ]; then
-    	rm -r /home/pi-star/Nextion_Temp
-fi
+#if [ -d /home/pi-star/Nextion_Temp ]; then
+    	rm -f -r /home/pi-star/Nextion_Temp
+#fi
 
 
 function Logit
@@ -74,14 +74,14 @@ function exitcode
 
 function cleandirs()
 {
-if [ -d /home/pi-star/Nextion_Temp ]; then
-    sudo rm -R /home/pi-star/Nextion_Temp
+#if [ -d /home/pi-star/Nextion_Temp ]; then
+    sudo rm -f -r /home/pi-star/Nextion_Temp
     Logit "Removed /home/pi-star/Nextion_Temp Directory"
-fi
-if [ -f /usr/local/etc/"$model$tft" ]; then
-	sudo rm /usr/local/etc/NX*.tft
+#fi
+#if [ -f /usr/local/etc/"$model$tft" ]; then
+	sudo rm -f /usr/local/etc/NX*.tft
     Logit "Remove Existing $model$tft"
-fi
+#fi
 
 }
 
@@ -162,7 +162,7 @@ function getea7kdo
                         	echo "Copied new tft to /usr/local/etc/"
                 	fi
 			if [ -f /home/pi-star/Nextion_Temp/NX4832K035.tft ]; then
-    				rm -r /usr/local/etc/Nextion_Support 
+    				rm -r -f /usr/local/etc/Nextion_Support 
 			 	if [ "$fb" ]; then
 					echo "Nextion_Support Directory Removed"				
 				fi
@@ -174,7 +174,8 @@ function getea7kdo
 		# Ensure all scripts are ececutable
 		sudo chmod +x /home/pi-star/Nextion_Temp/*.sh
 		# Send required files to Nextion_Support
-		sudo rsync -qru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* --exclude=ColorThemes.ini --exclude=profiles.ini
+		sudo rsync -qru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* --exclude=ColorThemes.ini --exclude=profiles.ini --exclude=wifiprofiles.ini
+
 		#Send .tft to /usr/local/etc/
 		sudo cp /home/pi-star/Nextion_Temp/"$model$tft" /usr/local/etc/
 		if [ "$fb" ]; then
@@ -202,6 +203,18 @@ function getea7kdo
 		else
 			if [ "$fb" ]; then
 			    	echo "profiles.ini found in /etc/ - Not Copied"
+			fi
+
+		fi
+		# Send wifiprofiles.ini to /etc/ if required.
+		if [ ! -f /etc/wifiprofiles.ini ] && [ -f /home/pi-star/Nextion_Temp/wifiprofiles.ini ]; then
+			cp /home/pi-star/Nextion_Temp/wifiprofiles.ini /etc/
+			if [ "$fb" ]; then
+			    	echo "Copied wifiprofiles.ini to /etc/"
+			fi
+		else
+			if [ "$fb" ]; then
+			    	echo "wifiprofiles.ini found in /etc/ - Not Copied"
 			fi
 
 		fi
