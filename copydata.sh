@@ -15,7 +15,8 @@ if [ -z "$1" ]; then
 	echo "Syntax copydata Colors     // to copy ColorThemes.ini to /eytc/"
 	echo "Syntax copydata Profiles    // to copy Profiles.ini to /etc/"
 	echo "Syntax copydata WiFi	// to copy wifiprofiles.ini to /etc"
-
+exit
+fi
 
 
 function copycolors
