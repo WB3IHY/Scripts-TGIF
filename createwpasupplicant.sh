@@ -40,5 +40,14 @@ echo "$CONFIG_CONTENT" > "$CONFIG_FILE"
 # Set appropriate permissions
 chmod 600 "$CONFIG_FILE"
 
+if [ "$1" == "install" ]; then
+	cp /home/pi-star/wpa_supplicant.conf /etc/wpa_supplicant/
+	echo "wpa_supplicant copied to /etc/wpa_supplicant/" 
+fi
+
 echo "---------------------------------------------"
 echo "WPA Supplicant configuration file created at $CONFIG_FILE"
+echo "To install copy to /etc/wpa_supplicant/"
+echo "or"
+echo "Re-run this scripts with the parameter install "
+echo "./createwpasupplicant install"
