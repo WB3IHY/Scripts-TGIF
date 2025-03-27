@@ -29,6 +29,7 @@ fi
 
 s1="NX3224K024"
 s3="NX4832K035"
+s4="NX8048K070"
 errtext="Error! - Aborting"
 if [ "$2" == "Beta" ]; then
 Beta="$2"
@@ -50,9 +51,6 @@ calltxt="EA7KDO"
 
 #echo "$scn"
 
-if [ ! -d /home/pi-star/Nextion_Temp2 ]; then
-    	mkdir /home/pi-star/Nextion_Temp2
-fi
 #if [ -d /home/pi-star/Nextion_Temp ]; then
     	rm -f -r /home/pi-star/Nextion_Temp
 #fi
@@ -86,6 +84,94 @@ function cleandirs()
 }
 
 # EA7KDO Script Function
+function NX80()
+{
+#		cleandirs
+		Logit "Loading NX8048K070 Screen and Scripts"
+
+			# First attempt to clone 
+ 			Logit "First Attempt to Clone Files Starting" 
+			cleandirs
+    		rm -f -r /home/pi-star/Nextion_Temp
+
+	Logit "Removeing /home/pi-star/Nextion_Temp"
+   	sudo git clone --depth 1 https://github.com/TGIF-Network/NX8048K070-KDO-Beta /home/pi-star/Nextion_Temp
+	status="$?"
+
+	if [ "$status" -eq 0 ]; then
+		Logit "Git Clone OK"
+	else
+		Logit "Git Clone Failed"
+		exit
+	fi
+			if [ ! -f /home/pi-star/Nextion_Temp/NX8048K070.tft ]; then
+			   echo "GitCopy Process Failed!"
+			   Logit "GitCopy Process Failed!"
+				exit
+			else
+				Logit "Git Copy Process Found New NX8048K035.tft"
+			fi
+			#Backup Nextion_Temp
+			if [ "$fb" ]; then
+                        	echo "Downloaded new EA7KDO Beta Screen package for $model$tft"
+                        	echo "Copied new tft to /usr/local/etc/"
+                	fi
+	Logit "Made Backup Dir"
+
+
+		# Create Nextion_Support Directory
+		mkdir /usr/local/etc/Nextion_Support
+		# Ensure all scripts are ececutable
+		sudo chmod +x /home/pi-star/Nextion_Temp/*.sh
+		# Send required files to Nextion_Support
+		sudo rsync -qru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Support/ --exclude=NX* --exclude=ColorThemes.ini --exclude=profiles.ini --exclude=wifiprofiles.ini
+
+		#Send .tft to /usr/local/etc/
+		sudo cp /home/pi-star/Nextion_Temp/"$model$tft" /usr/local/etc/
+		if [ "$fb" ]; then
+		    	echo "Downloaded new Screen package for $model$tft"
+			echo "Copied new tft to /usr/local/etc/"	
+		fi
+		tst=2	
+		# Send ColorThemes.ini to /etc if required
+		if [ ! -f /etc/ColorThemes.ini ] && [ -f /home/pi-star/Nextion_Temp/ColorThemes.ini ]; then
+			cp /home/pi-star/Nextion_Temp/ColorThemes.ini /etc/
+			if [ "$fb" ]; then
+			    	echo "Copied ColorThemes.ini to /etc/"
+			fi
+		else
+			if [ "$fb" ]; then
+				echo "ColorThemes.ini found in /etc/ - Not Copied"
+			fi	
+		fi
+		# Send profiles.ini to /etc/ if required.
+		if [ ! -f /etc/profiles.ini ] && [ -f /home/pi-star/Nextion_Temp/profiles.ini ]; then
+			cp /home/pi-star/Nextion_Temp/profiles.ini /etc/
+			if [ "$fb" ]; then
+			    	echo "Copied profiles.ini to /etc/"
+			fi
+		else
+			if [ "$fb" ]; then
+			    	echo "profiles.ini found in /etc/ - Not Copied"
+			fi
+
+		fi
+		# Send wifiprofiles.ini to /etc/ if required.
+		if [ ! -f /etc/wifiprofiles.ini ] && [ -f /home/pi-star/Nextion_Temp/wifiprofiles.ini ]; then
+			cp /home/pi-star/Nextion_Temp/wifiprofiles.ini /etc/
+			if [ "$fb" ]; then
+			    	echo "Copied wifiprofiles.ini to /etc/"
+			fi
+		else
+			if [ "$fb" ]; then
+			    	echo "wifiprofiles.ini found in /etc/ - Not Copied"
+			fi
+
+		fi
+
+
+}
+
 function getea7kdo
 {
 	tst=0
@@ -147,7 +233,6 @@ function getea7kdo
 				Logit "Git Copy Process Found New NX4832K035.tft"
 			fi
 			#Backup Nextion_Temp
-   			sudo rsync -qru /home/pi-star/Nextion_Temp/* /usr/local/etc/Nextion_Temp2
 			if [ "$fb" ]; then
                         	echo "Downloaded new EA7KDO Beta Screen package for $model$tft"
                         	echo "Copied new tft to /usr/local/etc/"
@@ -219,6 +304,11 @@ function getea7kdo
 
 		fi
      	fi
+#####################################
+
+
+###################################
+
 	if [ "$tst" == 0 ]; then
 		errtext="Invalid EA7KDO Screen Name $scn"	
 		exitcode 
@@ -226,14 +316,14 @@ function getea7kdo
 }
 
 
-#### Start of Main Code
+#### Start of Main Code ===================================================================
 
 errt=$(date)
 echo "$errt" > /home/pi-star/gc.log
 
 #echo "$scn  - $call" 
 if [ "$fb" ]; then
-	        if [ "$scn" != "$s1" -a "$scn" != "$s3" ]; then
+	        if [ "$scn" != "$s1" -a "$scn" != "$s3" -a "$scn" !- "$s4" ]; then
               		echo "EA7KDO Screen Name MUST be NX3224K024 or NX4832K035"
                        	errtext="Invalid EA7KDO Screen Name"
                         exitcode
@@ -263,8 +353,11 @@ sleep 1s
 #Stop the cron service
 sudo systemctl stop cron.service  > /dev/null
 
-getea7kdo
-
+if [ "$1" == "NX8048K070" ]; then
+	NX80
+else
+	getea7kdo
+fi
 
 model="$scn"
 
@@ -289,7 +382,4 @@ tag=$(git -C /home/pi-star/Nextion_Temp/ tag)
 # echo "$scn Ready  $execution_time"
 echo "$scn $tag Ready to Flash! $execution_time"
 
-if [ ! -f /home/pi-star/Nextion_Temp/NX4832K035.tft ]; then
-sudo rsync -qru /home/pi-star/Nextion_Temp2/*  /home/pi-star/Nextion_Temp 
-fi
 ######## cat /home/pi-star/gc.log
